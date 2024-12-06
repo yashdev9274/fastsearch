@@ -3,8 +3,8 @@ import { neon } from '@neondatabase/serverless'
 import { Index } from '@upstash/vector'
 import * as dotenv from 'dotenv'
 import { drizzle } from 'drizzle-orm/neon-http'
-import { vectorize } from '../lib/vectorize'
-import { productsTable } from './schema'
+// import { vectorize } from '../lib/vectorize'
+import { charactersTable } from './schema'
 
 dotenv.config()
 
@@ -15,9 +15,9 @@ async function main() {
   // @ts-expect-error neon-drizzle
   const db = drizzle(connector)
 
-  const products: (typeof productsTable.$inferInsert)[] = []
+  const characters: (typeof charactersTable.$inferInsert)[] = []
 
-  const productImageIDs = [
+  const characterImageIDs = [
     {
       imageId: 'dark_down_jacket_1.png',
       description:
@@ -123,10 +123,15 @@ async function main() {
       description:
         'A comfortable wind jacket designed to keep you warm during winter or rain. With a minimal light grey color it suits the rest of your outfit well.',
     },
+    {
+      imageId: 'boruto_uzumaki.png',
+      description:
+        'Boruto Uzumaki (Uzumaki Boruto) is a missing-ninja from Konohagakures Uzumaki clan and a direct descendant of the Hyūga clan through his mother. While initially resentful of his father and his absence since becoming Hokage, Boruto eventually comes to respect his father and duties.',
+    },
   ]
 
-  productImageIDs.forEach(({ description, imageId }, i) => {
-    products.push({
+  characterImageIDs.forEach(({ description, imageId }, i) => {
+    characters.push({
       id: (i + 1).toString(),
       name: formatFileName(imageId),
       description,
@@ -135,21 +140,21 @@ async function main() {
     })
   })
 
-  products.forEach(async (product) => {
-    await db.insert(productsTable).values(product).onConflictDoNothing()
+  // characters.forEach(async (character) => {
+  //   await db.insert(charactersTable).values(character).onConflictDoNothing()
 
-    await index.upsert({
-      id: product.id!,
-      vector: await vectorize(`${product.name}: ${product.description}`),
-      metadata: {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        imageId: product.imageId,
-      },
-    })
-  })
+  //   await index.upsert({
+  //     id: character.id!,
+  //     vector: await vectorize(`${character.name}: ${character.description}`),
+  //     metadata: {
+  //       id: character.id,
+  //       name: character.name,
+  //       description: character.description,
+  //       price: character.price,
+  //       imageId: character.imageId,
+  //     },
+  //   })
+  // })
 }
 
 
