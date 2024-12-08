@@ -1,6 +1,6 @@
 import { db } from '@/db';
 import { Characters, charactersTable } from '@/db/schema';
-// import { vectorize } from '@/lib/vectorize';
+import { vectorize } from '@/lib/vectorize';
 import { Index } from '@upstash/vector';
 import { sql } from 'drizzle-orm';
 import { X } from 'lucide-react';
@@ -39,48 +39,48 @@ const Page = async ({ searchParams }: PageProps) => {
     )
     .limit(3);
 
-  // if (characters.length < 3) {
-  //   try {
-  //     // Perform semantic search with vectorization
-  //     const vector = await vectorize(query);
+  if (characters.length < 3) {
+    try {
+      // Perform semantic search with vectorization
+      const vector = await vectorize(query);
 
-  //     const res = await index.query({
-  //       topK: 5,
-  //       vector,
-  //       includeMetadata: true,
-  //     });
+      const res = await index.query({
+        topK: 5,
+        vector,
+        includeMetadata: true,
+      });
 
-  //     const vectorcharacters = res
-  //       .filter((existingProduct) => {
-  //         if (
-  //           characters.some((product) => product.id === existingProduct.id) ||
-  //           existingProduct.score < 0.9
-  //         ) {
-  //           return false;
-  //         } else {
-  //           return true;
-  //         }
-  //       })
-  //       .map(({ metadata }) => metadata!);
+      const vectorcharacters = res
+        .filter((existingProduct) => {
+          if (
+            characters.some((product) => product.id === existingProduct.id) ||
+            existingProduct.score < 0.9
+          ) {
+            return false;
+          } else {
+            return true;
+          }
+        })
+        .map(({ metadata }) => metadata!);
 
-  //     characters.push(...vectorcharacters);
-  //   } catch (error: any) {
-  //     console.error('Error in semantic search:', error.message || error);
-  //   }
-  // }
+      characters.push(...vectorcharacters);
+    } catch (error: any) {
+      console.error('Error in semantic search:', error.message || error);
+    }
+  }
 
-  // if (characters.length === 0) {
-  //   return (
-  //     <div className='text-center py-4 bg-white shadow-md rounded-b-md'>
-  //       <X className='mx-auto h-8 w-8 text-gray-400' />
-  //       <h3 className='mt-2 text-sm font-semibold text-gray-900'>No results</h3>
-  //       <p className='mt-1 text-sm mx-auto max-w-prose text-gray-500'>
-  //         Sorry, we couldn't find any matches for{' '}
-  //         <span className='text-green-600 font-medium'>{query}</span>.
-  //       </p>
-  //     </div>
-  //   );
-  // }
+  if (characters.length === 0) {
+    return (
+      <div className='text-center py-4 bg-white shadow-md rounded-b-md'>
+        <X className='mx-auto h-8 w-8 text-gray-400' />
+        <h3 className='mt-2 text-sm font-semibold text-gray-900'>No results</h3>
+        <p className='mt-1 text-sm mx-auto max-w-prose text-gray-500'>
+          Sorry, we couldn't find any matches for{' '}
+          <span className='text-green-600 font-medium'>{query}</span>.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <ul className='py-4 divide-y divide-zinc-100 bg-white shadow-md rounded-b-md'>
@@ -105,9 +105,9 @@ const Page = async ({ searchParams }: PageProps) => {
                 {product.description}
               </p>
 
-              <p className='text-base font-medium text-gray-900'>
+              {/* <p className='text-base font-medium text-gray-900'>
                 ${product.price.toFixed(2)}
-              </p>
+              </p> */}
             </div>
           </li>
         </Link>

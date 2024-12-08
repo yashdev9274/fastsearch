@@ -1,5 +1,5 @@
 import { db } from '@/db'
-import { productsTable } from '@/db/schema'
+import { charactersTable } from '@/db/schema'
 import { notFound } from 'next/navigation'
 import { eq } from 'drizzle-orm'
 import BackButton from '@/components/BackButton'
@@ -20,8 +20,8 @@ const Page = async ({ params }: PageProps) => {
 
   const [product] = await db
     .select()
-    .from(productsTable)
-    .where(eq(productsTable.id, productId))
+    .from(charactersTable)
+    .where(eq(charactersTable.id, productId))
 
   if (!product) return notFound()
 
@@ -49,11 +49,11 @@ const Page = async ({ params }: PageProps) => {
         </div>
 
         <div className='mt-4'>
-          <div className='flex items-center'>
+          {/* <div className='flex items-center'>
             <p className='font-medium text-gray-900'>
               ${product.price.toFixed(2)}
             </p>
-          </div>
+          </div> */}
 
           <div className='mt-4 space-y-6'>
             <p className='text-base max-w-prose text-muted-foreground'>

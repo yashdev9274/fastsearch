@@ -3,7 +3,7 @@ import { neon } from '@neondatabase/serverless'
 import { Index } from '@upstash/vector'
 import * as dotenv from 'dotenv'
 import { drizzle } from 'drizzle-orm/neon-http'
-// import { vectorize } from '../lib/vectorize'
+import { vectorize } from '../lib/vectorize'
 import { charactersTable } from './schema'
 
 dotenv.config()
@@ -18,116 +18,88 @@ async function main() {
   const characters: (typeof charactersTable.$inferInsert)[] = []
 
   const characterImageIDs = [
-    {
-      imageId: 'dark_down_jacket_1.png',
-      description:
-        'A sleek, insulated down jacket designed for chilly urban adventures. Its slim fit and dark hue make it a versatile addition to any winter wardrobe.',
-    },
-    {
-      imageId: 'dark_down_jacket_2.png',
-      description:
-        'This durable down jacket offers exceptional warmth with a touch of elegance. Perfect for those who demand both style and functionality in cold weather.',
-    },
-    {
-      imageId: 'dark_fleece_jacket_1.png',
-      description:
-        'Experience the cozy warmth of this dark fleece jacket. Ideal for layering, its soft texture and classic design ensure comfort and style on cooler days.',
-    },
-    {
-      imageId: 'dark_leather_jacket_1.png',
-      description:
-        'A timeless dark leather jacket that combines classic styling with rugged durability. Perfect for adding an edge to any outfit, rain or shine.',
-    },
-    {
-      imageId: 'dark_parka_jacket_1.png',
-      description:
-        'Stay protected against the elements with this durable parka. Its insulated lining and fur-trimmed hood offer warmth and style in harsh conditions.',
-    },
-    {
-      imageId: 'dark_parka_jacket_2.png',
-      description:
-        'This sleek parka features a waterproof exterior and a thermal interior, making it a must-have for winter escapades in the city or the mountains.',
-    },
-    {
-      imageId: 'dark_parka_jacket_3.png',
-      description:
-        'With its adjustable features and multiple pockets, this parka blends practicality with modern aesthetics for the ultimate winter outerwear.',
-    },
-    {
-      imageId: 'dark_trench_coat_1.png',
-      description:
-        'A modern twist on a classic design, this dark trench coat offers both sophistication and weather resistance, perfect for rainy days.',
-    },
-    {
-      imageId: 'light_down_jacket_1.png',
-      description:
-        'Lightweight yet warm, this down jacket is an essential layer for transitional weather, offering comfort without bulk.',
-    },
-    {
-      imageId: 'light_down_jacket_2.png',
-      description:
-        'Embrace the cold in this light and airy down jacket, featuring a water-resistant shell and a sleek design for everyday wear.',
-    },
-    {
-      imageId: 'light_down_jacket_3.png',
-      description:
-        'This stylish down jacket combines warmth and lightweight design, making it the perfect companion for winter travel.',
-    },
-    {
-      imageId: 'light_fleece_jacket_1.png',
-      description:
-        'Enjoy the soft touch of this light fleece jacket, designed for brisk mornings and cool evenings, with a versatile zip-up style for easy layering.',
-    },
-    {
-      imageId: 'light_jeans_jacket_1.png',
-      description:
-        'A casual classic, this light denim jacket adds a layer of cool to any outfit, perfect for those crisp, sunny days.',
-    },
-    {
-      imageId: 'light_jeans_jacket_2.png',
-      description:
-        'Upgrade your casual wear with this distressed light denim jacket, featuring a relaxed fit and timeless appeal.',
-    },
-    {
-      imageId: 'light_parka_jacket_1.png',
-      description:
-        "This light parka offers a breathable, water-resistant layer, ideal for unpredictable weather, with a sleek design that doesn't compromise on style.",
-    },
-    {
-      imageId: 'light_trench_coat_1.png',
-      description:
-        'A chic and lightweight trench coat that brings an elegant layer to spring and autumn outfits, with a belted waist for a flattering fit.',
-    },
-    {
-      imageId: 'light_trench_coat_2.png',
-      description:
-        'Enjoy a stylish and sophisticated look with this lightweight trench coat made from a fabric that resists both wind and rain. Perfect for the transition between seasons.',
-    },
-    {
-      imageId: 'light_wind_jacket_1.png',
-      description:
-        'Take on the breezy days with this lightweight wind jacket that is designed to offer protection and style with its minimalist design and functional features.',
-    },
-    {
-      imageId: 'light_wind_jacket_2.png',
-      description:
-        'A versatile windbreaker for active days. This jacket offers lightweight comfort and resistance to the elements in a sleek package.',
-    },
-    {
-      imageId: 'light_wind_jacket_3.png',
-      description:
-        'Stay ahead of the weather with this dynamic light wind jacket, combining breathability with waterproof technology for all-day comfort.',
-    },
-    {
-      imageId: 'light_wind_jacket_4.png',
-      description:
-        'A comfortable wind jacket designed to keep you warm during winter or rain. With a minimal light grey color it suits the rest of your outfit well.',
-    },
+
     {
       imageId: 'boruto_uzumaki.png',
       description:
         'Boruto Uzumaki (Uzumaki Boruto) is a missing-ninja from Konohagakures Uzumaki clan and a direct descendant of the Hyūga clan through his mother. While initially resentful of his father and his absence since becoming Hokage, Boruto eventually comes to respect his father and duties.',
     },
+    {
+      imageId: 'naruto_uzumaki.png',
+      description:
+        'Naruto Uzumaki ( Uzumaki Naruto) is a shinobi of Konohagakures Uzumaki clan. He became the jinchūriki of the Nine-Tails on the day of his birth — a fate that caused him to be shunned by most of Konoha throughout his childhood.',
+    },
+    {
+      imageId: 'akamaru.png',
+      description:
+        'Akamaru is a nin-dog ( ninken) from Konohagakures Inuzuka clan. He is Kiba Inuzukas partner, as well as his best friend and constant companion. He is also a member of Team Kurenai.',
+    },
+    {
+      imageId: 'choji_akimichi.png',
+      description:
+        'Chōji Akimichi ( Akimichi Chōji) is a member of Konohagakures Akimichi Clan. Though sensitive about his weight, Chōji is nevertheless dedicated to his friends, especially in Team Asuma.',
+    },
+    {
+      imageId: 'sasuke_uchiha.png',
+      description:
+        'Sasuke Uchiha ( Uchiha Sasuke) is one of the last surviving members of Konohagakures Uchiha clan. After his older brother, Itachi, slaughtered their clan, Sasuke made it his mission in life to avenge them by killing Itachi. He is added to Team 7 upon becoming a Shinobi, and, through competition with his rival and best friend, Naruto Uzumaki, ',
+    },
+    {
+      imageId: 'kakashi_hatake.png',
+      description:
+        'Kakashi Hatake ( Hatake Kakashi) is a shinobi of Konohagakures Hatake clan. Famed as Kakashi of the Sharingan ( Sharingan no Kakashi) and the Copy Ninja ( Kopī Ninja), he is one of Konohas most talented ninja, regularly looked to for advice and leadership despite his personal dislike of responsibility.',
+    },
+    {
+      imageId: 'gaara.png',
+      description:
+        'Gaara (Gaara) is the Fifth Kazekage of Sunagakure, known for his mastery of sand-based ninjutsu. Once feared as a ruthless jinchuriki, he became a symbol of peace and unity among the ninja villages.',
+    },
+    {
+      imageId: 'hinata_hyuga.png',
+      description:
+        'Hinata Hyuga (Hyūga Hinata) is a kunoichi of Konohagakure\'s Hyuga clan and a member of Team 8. Known for her Byakugan and gentle nature, she becomes a strong and confident ninja.',
+    },
+    {
+      imageId: 'itachi_uchiha.png',
+      description:
+        'Itachi Uchiha (Uchiha Itachi) was a prodigy of Konohagakure\'s Uchiha clan. A member of the Akatsuki, he sacrificed his reputation and life to protect his village and younger brother, Sasuke.',
+    },
+    {
+      imageId: 'jiraiya.png',
+      description:
+        'Jiraiya (Jiraiya) was one of the Legendary Sannin of Konohagakure and a renowned author. He trained several powerful ninjas, including Naruto Uzumaki, and was known for his mastery of sage mode.',
+    },
+    {
+      imageId: 'neji_hyuga.png',
+      description:
+        'Neji Hyuga (Hyūga Neji) was a prodigious shinobi of Konohagakure\'s Hyuga clan. Known for his exceptional Byakugan skills, he overcame his clan\'s internal struggles and became a symbol of change.',
+    },
+    {
+      imageId: 'orochimaru.png',
+      description:
+        'Orochimaru (Orochimaru) is one of the Legendary Sannin and a former rogue ninja of Konohagakure. He is known for his quest for immortality and mastery of forbidden techniques.',
+    },
+    {
+      imageId: 'sakura_haruno.png',
+      description:
+        'Sakura Haruno (Haruno Sakura) is a kunoichi of Konohagakure and a member of Team 7. She is known for her medical ninjutsu and immense strength under Tsunade\'s tutelage.',
+    },
+    {
+      imageId: 'shikamaru_nara.png',
+      description:
+        'Shikamaru Nara (Nara Shikamaru) is a shinobi of Konohagakure\'s Nara clan and a member of Team 10. Known for his strategic brilliance, he becomes a key figure in Konoha\'s leadership.',
+    },
+    {
+      imageId: 'tsunade.png',
+      description:
+        'Tsunade (Tsunade) is one of the Legendary Sannin and the Fifth Hokage of Konohagakure. Known for her incredible strength and medical expertise, she played a vital role in Konoha\'s recovery after the Fourth Shinobi World War.',
+    },
+    {
+      imageId: 'zabuza_momochi.png',
+      description:
+        'Zabuza Momochi (Momochi Zabuza) was a rogue ninja from Kirigakure, known as the Demon of the Hidden Mist. He wielded the Kubikiribocho and was one of the Seven Ninja Swordsmen of the Mist.',
+    },
+
   ]
 
   characterImageIDs.forEach(({ description, imageId }, i) => {
@@ -135,9 +107,14 @@ async function main() {
       id: (i + 1).toString(),
       name: formatFileName(imageId),
       description,
-      price: parseFloat(faker.commerce.price({ min: 40, max: 200 })),
       imageId,
     })
+  })
+
+  characters.forEach(async (character) => {
+    await db.insert(charactersTable).values(character).
+      onConflictDoNothing()
+
   })
 
   // characters.forEach(async (character) => {
@@ -150,7 +127,6 @@ async function main() {
   //       id: character.id,
   //       name: character.name,
   //       description: character.description,
-  //       price: character.price,
   //       imageId: character.imageId,
   //     },
   //   })
